@@ -1,31 +1,168 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿
+<div ng-app="StudentApp">
+    <div ng-controller="StudentController as studentCtrl">
+        <div ng-hide="studentCtrl.LoggedIn" class="row">
+
+            <div class="col-md-12">
+                <div ng-show="studentCtrl.Errors.length" focus-on-show tabindex="-1" class="alert alert-danger">
+                    <div ng-repeat="err in studentCtrl.Errors">
+                        {{err.key}}: {{err.value}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h2>Sign in to continue</h2>
+                <label for="UserId">User ID</label>
+                <input class="form-control" id="UserId" ng-model="studentCtrl.UserId" />
+
+                <label for="password">Password* (Anything)</label>
+                <input type="password" id="password" class="form-control" ng-model="studentCtrl.Password" />
+                <button class="btn btn-default" ng-click="studentCtrl.Login('@Url.Action("Login")')">Login</button>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                Or continue to the <a href="@Url.Action("Admin")">Admin page</a>
+            </div>
+        </div>
+        <div ng-show="studentCtrl.LoggedIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div ng-show="studentCtrl.Errors.length" focus-on-show tabindex="-1" class="alert alert-danger">
+                        <div ng-repeat="err in studentCtrl.Errors">
+                            {{err.key}}: {{err.value}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Course Registration</h1>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2>Available Courses</h2>
+                        </div>
+                        <div class="panel-body maxHeight500 verticalOverflowScroll">
+                            <ul id="classList">
+                                <li ng-repeat="Course in studentCtrl.Courses">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>{{Course.CourseId}}</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label>{{Course.Title}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 border-right">
+                                            {{Course.Description}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{Course.Credits}} Credits
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{Course.Capacity - Course.RegisteredCount}} Seats Remaining
+                                        </div>
+                                    </div>
+                                    <div class="row bottom0">
+                                        <div class="col-md-8">
+                                            <button ng-click="studentCtrl.AddToSelected($index)" class="btn btn-info">Add</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2>Your Registered Courses</h2>
+                        </div>
+                        <div class="panel-body maxHeight500 verticalOverflowScroll">
+                            <ul id="classList">
+                                <li ng-repeat="Course in studentCtrl.User.Courses">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>{{Course.CourseId}}</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label>{{Course.Title}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 border-right">
+                                            {{Course.Description}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{Course.Credits}} Credits
+                                        </div>
+                                    </div>
+                                    <div class="row bottom0">
+                                        <div class="col-md-12">
+                                            <button ng-click="studentCtrl.Drop($index)" class="btn btn-danger">Drop</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2>Your Selected Courses</h2>
+                        </div>
+                        <div class="panel-body maxHeight500 verticalOverflowScroll">
+                            <ul ng-show="studentCtrl.User.SelectedCourses.length" id="classList">
+                                <li ng-repeat="Course in studentCtrl.User.SelectedCourses">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>{{Course.CourseId}}</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label>{{Course.Title}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 border-right">
+                                            {{Course.Description}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{Course.Credits}} Credits
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{Course.Capacity - Course.RegisteredCount}} Seats Remaining
+                                        </div>
+                                    </div>
+                                    <div class="row bottom0">
+                                        <div class="col-md-6">
+                                            <button ng-click="studentCtrl.Register($index)" class="btn btn-success">Register</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button ng-click="studentCtrl.Remove($index)" class="btn btn-warning">Remove</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div ng-hide="studentCtrl.User.SelectedCourses.length">
+                                You don't have any courses in this list.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/Student.js"></script>
 }
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>

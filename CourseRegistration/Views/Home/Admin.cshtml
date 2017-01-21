@@ -1,0 +1,48 @@
+﻿<h1>Administration - Course Registration</h1>
+<div ng-app="Admin">
+    <div ng-controller="AdminController as  admCtrl">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        View a Course's Registrations
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="CourseId">
+                                    Course ID
+                                </label>
+                                <input ng-model="admCtrl.CourseFilt" id="CourseId" class="form-control" />
+                                <select ng-options="admCtrl.Courses.Id as admCtrl.Courses.Title in admCtrl.Courses | filter: admCtrl.CourseFilt" class="form-control">
+                                    <option value="">Please Select a course</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        View a Student's Registrations
+                    </div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/Admin.js"></script>
+}
