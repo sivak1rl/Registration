@@ -1,7 +1,14 @@
 ﻿<h1>Administration - Course Registration</h1>
-<div ng-app="Admin">
+<div ng-app="AdminApp">
     <div ng-controller="AdminController as  admCtrl">
         <div class="row">
+            <div class="col-md-12">
+                <div ng-show="admCtrl.Errors.length" focus-on-show tabindex="-1" class="alert alert-danger">
+                    <div ng-repeat="err in admCtrl.Errors">
+                        {{err.key}}: {{err.value}}
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -9,19 +16,30 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <label for="CourseId">
                                     Course ID
                                 </label>
                                 <input ng-model="admCtrl.CourseFilt" id="CourseId" class="form-control" />
-                                <select ng-options="admCtrl.Courses.Id as admCtrl.Courses.Title in admCtrl.Courses | filter: admCtrl.CourseFilt" class="form-control">
-                                    <option value="">Please Select a course</option>
+                                <select ng-model="admCtrl.CourseId" class="form-control">
+                                    <option value="">Please select a course</option>
+                                    <option ng-repeat="Course in admCtrl.Courses |filter : admCtrl.CourseFilt" value="{{Course.Id}}">{{Course.CourseId}}: {{Course.Title}}</option>
                                 </select>
+                                <button class="btn btn-default" ng-click="admCtrl.ChooseCourse()">Choose This Course</button>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-
+                            <div ng-show="admCtrl.Course" class="col-md-8">
+                                <h2>Students registered for {{admCtrl.Course.CourseId}}: {{admCtrl.Course.Title}}</h2>
+                                <div class="jumbotron">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul>
+                                                <li ng-repeat="Student in admCtrl.Course.Students">
+                                                    {{Student.StudentId}}: {{Student.FirstName}} {{Student.LastName}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -35,7 +53,61 @@
                         View a Student's Registrations
                     </div>
                     <div class="panel-body">
-
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="StudentId">
+                                    Student ID
+                                </label>
+                                <input ng-model="admCtrl.StudentFilt" id="StudentId" class="form-control" />
+                                <select ng-model="admCtrl.StudentId" class="form-control">
+                                    <option value="">Please select a course</option>
+                                    <option ng-repeat="Student in admCtrl.Students |filter : admCtrl.StudentFilt" value="{{Student.Id}}">{{Student.StudentId}}: {{Student.FirstName}} {{Student.LastName}}</option>
+                                </select>
+                                <button class="btn btn-default" ng-click="admCtrl.ChooseStudent()">Choose This Student</button>
+                                <hr />
+                                <label for="StudentCourseId">
+                                    Course ID
+                                </label>
+                                <input ng-model="admCtrl.StudentCourseFilt" id="StudentCourseId" class="form-control" />
+                                <select ng-model="admCtrl.StudentCourseId" class="form-control">
+                                    <option value="">Please select a course</option>
+                                    <option ng-repeat="Course in admCtrl.Courses |filter : admCtrl.StudentCourseFilt" value="{{Course.Id}}">{{Course.CourseId}}: {{Course.Title}}</option>
+                                </select>
+                                <button class="btn btn-default" ng-click="admCtrl.Register(admCtrl.StudentCourseId)">Register the student for this course</button>
+                            </div>
+                            <div ng-show="admCtrl.Student" class="col-md-8">
+                                <h2>Courses registered for by {{admCtrl.Student.LastName}}, {{admCtrl.Student.FirstName}} ({{admCtrl.Student.Id}})</h2>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ul id="classList">
+                                            <li ng-repeat="Course in admCtrl.Student.Courses">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>{{Course.CourseId}}</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>{{Course.Title}}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-8 border-right">
+                                                        {{Course.Description}}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        {{Course.Credits}} Credits
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button ng-click="admCtrl.DropCourse(Course.Id)" class="btn btn-danger">Drop</button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

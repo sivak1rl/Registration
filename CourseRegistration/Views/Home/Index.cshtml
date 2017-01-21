@@ -20,12 +20,6 @@
                 <button class="btn btn-default" ng-click="studentCtrl.Login('@Url.Action("Login")')">Login</button>
             </div>
         </div>
-        <hr />
-        <div class="row">
-            <div class="col-md-12">
-                Or continue to the <a href="@Url.Action("Admin")">Admin page</a>
-            </div>
-        </div>
         <div ng-show="studentCtrl.LoggedIn">
             <div class="row">
                 <div class="col-md-12">
@@ -160,6 +154,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        Or continue to the <a href="@Url.Action("Admin")">Admin page</a>
     </div>
 </div>
 @section scripts {

@@ -31,6 +31,18 @@ namespace CourseRegistration.Controllers
                           };
             return Json(courses, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult GetStudents()
+        {
+            var students = from student in dbContext.Students
+                           select new
+                           {
+                               Id = student.Id,
+                               StudentId = student.StudentId,
+                               FirstName = student.FirstName,
+                               LastName = student.LastName
+                           };
+            return Json(students, JsonRequestBehavior.AllowGet);
+        }
 
         public JsonResult Login(int studentId)
         {
@@ -59,8 +71,8 @@ namespace CourseRegistration.Controllers
             catch (Exception)
             {
                 Response.StatusCode = 418;
-                Response.StatusDescription = "I'm a teapot";
-                return Json(new { Error = "That doesn't look like a valid User ID" }, JsonRequestBehavior.AllowGet);
+                Response.StatusDescription = "I'm a teapot!";
+                return Json(new { Errors = "That doesn't look like a valid User ID" }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -70,11 +82,24 @@ namespace CourseRegistration.Controllers
             {
                 var stud = dbContext.Students.First(m => m.Id == studentId);
                 var crs = dbContext.Courses.First(m => m.Id == courseId);
-                if (crs.Capacity - crs.Students.Count() > 0)
+                if (stud.Courses.Contains(crs))
+                {
+                    Response.StatusCode = 418;
+                    Response.StatusDescription = "I'm a teapot!";
+                    return Json(new { Errors = "You're already enrolled!" });
+                }
+                else if (crs.Capacity - crs.Students.Count() > 0)
                 {
                     stud.Courses.Add(crs);
                     dbContext.SaveChanges();
-                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                    return Json(new {
+                        Id = crs.Id,
+                        CourseId = crs.CourseId,
+                        Title = crs.Title,
+                        Credits = crs.Credits,
+                        Capacity = crs.Capacity,
+                        Description = crs.Description
+                    }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -112,6 +137,56 @@ namespace CourseRegistration.Controllers
         public ActionResult Admin()
         {
             return View();
+        }
+
+        public JsonResult GetCourse(int courseId)
+        {
+            var Course = (from course in dbContext.Courses.ToList()
+                          where course.Id == courseId
+                          select new
+                          {
+                              Id = course.Id,
+                              CourseId = course.CourseId,
+                              Title = course.Title,
+                              Credits = course.Credits,
+                              Capacity = course.Capacity,
+                              Description = course.Description,
+                              Students = from student in course.Students.ToList()
+                                         select new
+                                         {
+                                             Id = student.Id,
+                                             StudentId = student.StudentId,
+                                             FirstName = student.FirstName,
+                                             LastName = student.LastName
+                                         }
+                          }).Single();
+
+            return Json(Course, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetStudent(int studentId)
+        {
+            var Student = (from student in dbContext.Students.ToList()
+                           where student.Id == studentId
+                           select new
+                           {
+                               Id = student.Id,
+                               StudentId = student.StudentId,
+                               FirstName = student.FirstName,
+                               LastName = student.LastName,
+                               Courses = from course in student.Courses.ToList()
+                                         select new
+                                         {
+                                             Id = course.Id,
+                                             CourseId = course.CourseId,
+                                             Title = course.Title,
+                                             Credits = course.Credits,
+                                             Capacity = course.Capacity,
+                                             Description = course.Description
+                                         }
+                           }).Single();
+
+            return Json(Student, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
