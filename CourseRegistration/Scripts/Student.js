@@ -10,7 +10,7 @@
 
         this.Courses = [];
 
-        $http.get('/Home/GetCourses').then(
+        $http.get(baseSiteURL + 'Home/GetCourses').then(
             function (retVal) {
                 self.Courses = retVal.data;
                 self.Courses = self.Courses.filter(function (el) {
@@ -63,7 +63,7 @@
 
         this.Register = function (index) {
             self.Errors = [];
-            $http.post('/Home/Register', { courseId: self.User.SelectedCourses[index].Id, studentId: self.User.Id })
+            $http.post(baseSiteURL + 'Home/Register', { courseId: self.User.SelectedCourses[index].Id, studentId: self.User.Id })
             .then(function () {
                 self.User.Courses.push(self.User.SelectedCourses[index]);
                 self.User.SelectedCourses.splice(index, 1);
@@ -72,9 +72,9 @@
             });
         }
         this.Drop = function (index) {
-            if (confirm('Are you sure you would like to drop this course?')) {
+            if (confirm('Are you sure you would like todrop this course?')) {
                 self.Errors = [];
-                $http.post('/Home/Drop', { courseId: self.User.Courses[index].Id, studentId: self.User.Id })
+                $http.post(baseSiteURL + '/Home/Drop', { courseId: self.User.Courses[index].Id, studentId: self.User.Id })
                 .then(function (retval) {
                     self.Courses.push(retval.data);
                     self.Courses.sort(function (a, b) { return a.CourseId.localeCompare(b.CourseId); })

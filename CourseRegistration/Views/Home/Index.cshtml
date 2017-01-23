@@ -22,6 +22,10 @@
         </div>
         <div ng-show="studentCtrl.LoggedIn">
             <div class="row">
+                <div class="col-md-11"></div>
+                <div class="col-md-1">
+                    <button type="button" ng-click="studentCtrl.Logout()" class="btn btn-warning pull-right">Log out</button>
+                </div>
                 <div class="col-md-12">
                     <div ng-show="studentCtrl.Errors.length" focus-on-show tabindex="-1" class="alert alert-danger">
                         <div ng-repeat="err in studentCtrl.Errors">

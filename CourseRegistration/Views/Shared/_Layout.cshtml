@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    
+
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -19,6 +19,9 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script>
+        var baseSiteURL = '@Url.Content("~/")';
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

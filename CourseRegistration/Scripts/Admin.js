@@ -6,7 +6,7 @@
 
         var self = this;
 
-        $http.get("/Home/GetCourses").then(
+        $http.get(baseSiteURL + "Home/GetCourses").then(
             function (retVal) {
                 self.Courses = retVal.data;
                 console.log(self.Courses);
@@ -14,7 +14,7 @@
 
             }
         );
-        $http.get("/Home/GetStudents").then(
+        $http.get(baseSiteURL + "Home/GetStudents").then(
             function (retVal) {
                 self.Students = retVal.data;
             }, function () {
@@ -22,7 +22,7 @@
             }
         );
         this.ChooseCourse = function () {
-            $http.get("/Home/GetCourse", { params: { courseId: self.CourseId } }).then(function (retVal) {
+            $http.get(baseSiteURL + "Home/GetCourse", { params: { courseId: self.CourseId } }).then(function (retVal) {
                 self.Course = retVal.data;
                 console.log(self.Course);
             }, function () {
@@ -32,7 +32,7 @@
         }
 
         this.ChooseStudent = function () {
-            $http.get("/Home/GetStudent", { params: { studentId: self.StudentId } }).then(function (retVal) {
+            $http.get(baseSiteURL + "Home/GetStudent", { params: { studentId: self.StudentId } }).then(function (retVal) {
                 self.Student = retVal.data;
                 console.log(self.Student);
             }, function () {
@@ -43,7 +43,7 @@
 
         this.Register = function (courseId) {
             self.Errors = [];
-            $http.post('/Home/Register', { courseId: courseId, studentId: self.Student.Id })
+            $http.post(baseSiteURL + 'Home/Register', { courseId: courseId, studentId: self.Student.Id })
             .then(function (retVal) {
                 console.log(retVal.data);
                 self.Student.Courses.push(retVal.data);
@@ -55,7 +55,7 @@
         this.DropCourse = function (courseId) {
             if (confirm('Are you sure you would like to drop this course?')) {
                 self.Errors = [];
-                $http.post('/Home/Drop', { courseId: courseId, studentId: self.Student.Id })
+                $http.post(baseSiteURL + 'Home/Drop', { courseId: courseId, studentId: self.Student.Id })
                 .then(function (retval) {
                     console.log(self.Student)
                     console.log(self.Student.Courses)
